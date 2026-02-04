@@ -1,0 +1,76 @@
+/* Visited Link Indicator */
+.link-item.visited-link {
+    border-color: rgba(0, 120, 212, 0.4);
+    background: rgba(0, 120, 212, 0.1);
+}
+
+.visited-link .link-text {
+    color: #fff;
+}
+
+.visited-link .ext-icon {
+    display: none;
+    /* Hide default arrow */
+}
+
+/* New Elements for Visited State */
+.badge-done {
+    display: inline-block;
+    background: #0078d4;
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    vertical-align: middle;
+}
+
+/* Closing Countdown State */
+.link-item {
+    position: relative;
+    /* Needed for bar positioning */
+    overflow: hidden;
+    /* Clip the bar */
+}
+
+.link-item.closing {
+    background: rgba(0, 120, 212, 0.2);
+    border-color: #0078d4;
+    color: #fff;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    justify-content: center;
+    /* Center the text */
+}
+
+.link-item.closing .link-text,
+.link-item.closing span,
+.link-item.closing svg {
+    position: relative;
+    z-index: 2;
+    /* Ensure text sits on top of bar */
+}
+
+.countdown-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 4px;
+    /* match screenshot slim bar */
+    background: #00bcf2;
+    /* Bright Cyan/Blue */
+    width: 100%;
+    transition: width 1s linear;
+    z-index: 1;
+    box-shadow: 0 0 10px rgba(0, 188, 242, 0.5);
+}
+
+.link-item.closing .ext-icon,
+.link-item.closing .badge-done,
+.link-item.closing .icon-check {
+    display: none;
+}

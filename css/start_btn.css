@@ -1,0 +1,106 @@
+/* Liquid Start Button - Restored & Enhanced */
+.start-session-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 3.5rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: white;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    z-index: 10;
+    overflow: hidden;
+    border-radius: 50px;
+    transition: all 0.4s ease;
+    box-shadow: 0 0 30px rgba(0, 120, 212, 0.3);
+    margin-top: 1rem;
+    /* Spacing fix */
+}
+
+/* Moving Gradient Border */
+.start-session-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 50px;
+    padding: 2px;
+    /* Border width */
+    background: linear-gradient(90deg, #0078D4, #00bcf2, #ffffff, #9e25d2, #0078D4);
+    background-size: 300% 100%;
+    animation: border-flow 4s linear infinite;
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+}
+
+/* Inner Background */
+.start-session-btn::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    right: 2px;
+    bottom: 2px;
+    background: linear-gradient(135deg, rgba(0, 120, 212, 0.5), rgba(158, 37, 210, 0.5));
+    border-radius: 50px;
+    z-index: -1;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.start-session-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 50px rgba(0, 188, 242, 0.6);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+.start-session-btn:hover::after {
+    background: linear-gradient(135deg, rgba(0, 120, 212, 0.8), rgba(158, 37, 210, 0.8));
+    filter: brightness(1.2);
+}
+
+@keyframes border-flow {
+    to {
+        background-position: 300% center;
+    }
+}
+
+.start-session-btn svg {
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.start-session-btn:hover svg {
+    transform: translateX(5px) rotate(15deg) scale(1.2);
+}
+
+/* Running State */
+.start-session-btn.running {
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+
+.start-session-btn.running svg {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

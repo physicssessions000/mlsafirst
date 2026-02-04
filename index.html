@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>First Account | Ambassador Hub</title>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23F25022' d='M11 11H1V1h10v10z'/%3E%3Cpath fill='%237FBA00' d='M23 11H13V1h10v10z'/%3E%3Cpath fill='%2300A4EF' d='M11 23H1V13h10v10z'/%3E%3Cpath fill='%23FFB900' d='M23 23H13V13h10v10z'/%3E%3C/svg%3E">
+    <meta name="description"
+        content="Official resource hub for Microsoft Student Ambassadors. Access curated learning paths for Copilot, Azure, and more.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Orbitron:wght@400;700;900&family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/progress.css">
+    <link rel="stylesheet" href="css/visited.css">
+    <link rel="stylesheet" href="css/header_pill.css">
+    <link rel="stylesheet" href="css/start_btn.css">
+    <link rel="stylesheet" href="css/celebrate.css">
+    <link rel="stylesheet" href="css/curtain.css">
+    <link rel="stylesheet" href="css/scanlines.css">
+</head>
+
+<body>
+    <!-- Cyber Curtain Entrance -->
+    <div class="curtain-container" id="loading-curtain">
+        <div class="curtain-panel curtain-left"></div>
+        <div class="curtain-panel curtain-right"></div>
+        <div class="curtain-content">
+            <div class="loading-ring"></div>
+            <div class="curtain-emblem" data-text="INITIALIZING">INITIALIZING</div>
+            <div class="scan-line"></div>
+        </div>
+    </div>
+
+    <!-- CRT Overlays -->
+    <div class="scanlines"></div>
+    <div class="vignette-pulse"></div>
+    <!-- Top Fixed Progress Bar -->
+    <div class="top-progress-container">
+        <div class="top-progress-fill" id="top-progress-fill"></div>
+    </div>
+
+    <div class="background-canvas" id="canvas-container">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <div class="app-container">
+        <header class="hero-section">
+            <div class="hero-content">
+                <div class="badge">BETA AMBASSADOR</div>
+                <h1>Microsoft Student <br><span class="text-gradient">Ambassador Hub</span></h1>
+
+                <div
+                    style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 0rem;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <path fill="#F25022" d="M11 11H1V1h10v10z" />
+                        <path fill="#7FBA00" d="M23 11H13V1h10v10z" />
+                        <path fill="#00A4EF" d="M11 23H1V13h10v10z" />
+                        <path fill="#FFB900" d="M23 23H13V13h10v10z" />
+                    </svg>
+                    <p style="margin: 0; font-size: 1rem; color: #e2e8f0;">First MLSA Account:
+                        rakeshvajrapu1411@gmail.com</p>
+                </div>
+
+                <div class="query-pill" id="copy-query-btn" title="Click to Copy">
+                    <span class="status-dot"></span>
+                    <code class="query-text">?wt.mc_id=studentamb_395468</code>
+                    <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                    </svg>
+                </div>
+
+                <div style="margin-top: 1.5rem;">
+                    <button id="start-session-btn" class="start-session-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="5 3 19 12 5 21 5 3" />
+                        </svg>
+                        <span>START SESSION</span>
+                    </button>
+                    <p style="font-size: 0.8rem; color: rgba(255,255,255,0.5); margin-top: 0.5rem;">Auto-opens and
+                        tracks all links</p>
+                </div>
+            </div>
+        </header>
+
+        <main class="categories-container" id="categories-grid">
+            <!-- Categories will be injected here by JS -->
+        </main>
+
+        <footer>
+            <p>&copy; 2026 Microsoft Student Ambassador Hub. Built for Community.</p>
+        </footer>
+    </div>
+
+    <!-- Floating Progress Bar -->
+    <div class="progress-dock">
+        <div class="progress-dock-inner">
+            <div class="progress-container">
+                <div class="progress-info">
+                    <span class="progress-label">PROGRESS</span>
+                    <span class="progress-count" id="progress-count">0/0</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                </div>
+            </div>
+            <div class="progress-stat">
+                <span class="percentage" id="progress-percent">0%</span>
+            </div>
+            <button class="reset-btn" id="reset-btn" title="Reset Progress" aria-label="Reset Progress">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 12" />
+                    <path d="M3 3v9h9" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Celebration Overlay -->
+    <div class="celebration-overlay" id="celebration-modal">
+        <div class="popper-container popper-left">
+            <svg viewBox="0 0 100 100" class="popper-svg" style="transform: rotate(45deg);">
+                <path d="M20,80 L40,80 L35,40 L25,40 Z" fill="#e74c3c" /> <!-- Body -->
+                <path d="M20,80 Q30,90 40,80" fill="#c0392b" /> <!-- Base -->
+                <path d="M25,40 L35,40 L40,30 L20,30 Z" fill="#f1c40f" /> <!-- Gold Rim -->
+                <path d="M30,80 L30,40" stroke="rgba(0,0,0,0.1)" stroke-width="2" />
+            </svg>
+        </div>
+        <div class="popper-container popper-right">
+            <svg viewBox="0 0 100 100" class="popper-svg" style="transform: rotate(-45deg);">
+                <path d="M20,80 L40,80 L35,40 L25,40 Z" fill="#e74c3c" />
+                <path d="M20,80 Q30,90 40,80" fill="#c0392b" />
+                <path d="M25,40 L35,40 L40,30 L20,30 Z" fill="#f1c40f" />
+                <path d="M30,80 L30,40" stroke="rgba(0,0,0,0.1)" stroke-width="2" />
+            </svg>
+        </div>
+
+        <div class="celebration-card">
+            <div class="celebration-icon">🎉</div>
+            <h2 class="celebration-title">Mission Complete!</h2>
+            <p class="celebration-text">You've successfully explored all resources. You're now ready to lead, build, and
+                grow as a Student Ambassador!</p>
+            <button class="celebration-btn" onclick="closeCelebration()">Let's Go!</button>
+        </div>
+    </div>
+
+    <!-- Scripts (Loaded sequentially for file:// compatibility) -->
+    <script src="js/data.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/confetti.js"></script>
+    <script src="js/drawing.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
