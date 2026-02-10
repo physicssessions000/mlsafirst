@@ -22,7 +22,11 @@ const Confetti = {
         this.ctx = this.canvas.getContext('2d');
         this.resize();
 
-        window.addEventListener('resize', () => this.resize());
+        // Bind resize only once
+        if (!this.resizeBound) {
+            this.resizeBound = this.resize.bind(this);
+            window.addEventListener('resize', this.resizeBound);
+        }
     },
 
     resize() {
@@ -93,11 +97,18 @@ const Confetti = {
 
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        // Filter out dead particles
-        this.particles = this.particles.filter(p => p.y < this.canvas.height + 100);
+        // Optimization: Use a secondary array or swap-remove to avoid filter() allocation if possible.
+        // For simplicity and readablity, we will stick to filter but reduce frequency of checks?
+        // Actually, just let it run but limit max particles.
 
-        this.particles.forEach(p => {
-            // Physics Update
+        if (this.particles.length > 500) {
+            this.particles = this.particles.slice(this.particles.length - 400); // Hard cap
+        }
+
+        // Filter out dead particles
+        // In-place filtering or just robust check?
+        const activeParticles = [];
+        for (const p of this.particles) {
             p.vx *= p.drag;
             p.vy *= p.drag;
             p.vy += p.gravity;
@@ -106,6 +117,13 @@ const Confetti = {
             p.y += p.vy;
             p.rotation += p.rotationSpeed;
 
+            if (p.y < this.canvas.height + 100) {
+                activeParticles.push(p);
+            }
+        }
+        this.particles = activeParticles;
+
+        for (const p of this.particles) {
             this.ctx.save();
             this.ctx.translate(p.x, p.y);
             this.ctx.rotate((p.rotation * Math.PI) / 180);
@@ -129,9 +147,13 @@ const Confetti = {
             }
 
             this.ctx.restore();
-        });
+        }
 
-        this.animationId = requestAnimationFrame(() => this.animate());
+        if (this.particles.length > 0 || this.interval) {
+            this.animationId = requestAnimationFrame(() => this.animate());
+        } else {
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        }
     },
 
     drawStar(ctx, cx, cy, spikes, outerRadius, innerRadius) {

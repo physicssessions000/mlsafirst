@@ -83,7 +83,7 @@ function initProgressTracker() {
 
     let clickedIds = [];
     let activeClosingIds = new Set();
-    let sessionHeartbeat = null;
+
 
     localStorage.removeItem(STORAGE_KEY);
 
@@ -92,7 +92,7 @@ function initProgressTracker() {
     const topFillEl = document.getElementById('top-progress-fill');
     const percentEl = document.getElementById('progress-percent');
     const resetBtn = document.getElementById('reset-btn');
-    const startBtn = document.getElementById('start-session-btn');
+
 
     function updateUI() {
         const count = clickedIds.length;
@@ -148,7 +148,7 @@ function initProgressTracker() {
             if (activeClosingIds.has(id)) return;
 
             const newWindow = window.open(url, '_blank');
-            
+
             // Check if blocked
             if (!newWindow) {
                 // Popup Blocked
@@ -204,80 +204,17 @@ function initProgressTracker() {
     if (resetBtn) {
         resetBtn.addEventListener('click', () => {
             if (confirm('Reset all progress?')) {
-                if (sessionHeartbeat) {
-                    clearInterval(sessionHeartbeat);
-                    sessionHeartbeat = null;
-                }
                 clickedIds = [];
                 activeClosingIds.clear();
-                if (startBtn) {
-                    startBtn.classList.remove('running');
-                    startBtn.innerHTML = `
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polygon points="5 3 19 12 5 21 5 3" />
-                        </svg>
-                        <span>START SESSION</span>
-                    `;
-                }
+
+
                 sessionStorage.removeItem('celebrated_current_session');
                 updateUI();
             }
         });
     }
 
-    if (startBtn) {
-        startBtn.addEventListener('click', () => {
-            if (startBtn.classList.contains('running')) return;
-            if (!confirm("Start automated session? Tabs will open and close automatically.")) return;
 
-            startBtn.classList.add('running');
-            const originalText = startBtn.innerHTML;
-            startBtn.innerHTML = '<span>SESSION STARTED</span>';
-
-            const links = Array.from(document.querySelectorAll('.link-item'));
-            const unvisitedLinks = links.filter(link => {
-                const id = link.getAttribute('data-track-id');
-                return !clickedIds.includes(id);
-            });
-
-            if (unvisitedLinks.length === 0) {
-                alert("All links already visited!");
-                startBtn.classList.remove('running');
-                startBtn.innerHTML = originalText;
-                return;
-            }
-
-            let index = 0;
-            let nextActionTime = Date.now();
-            const PACE = 2500; // Slower pace to prevent popup blocking (2.5s)
-
-            sessionHeartbeat = setInterval(() => {
-                const now = Date.now();
-                if (now < nextActionTime) return;
-
-                if (index >= unvisitedLinks.length) {
-                    clearInterval(sessionHeartbeat);
-                    startBtn.classList.remove('running');
-                    startBtn.innerHTML = '<span>SESSION ENDED</span>';
-                    setTimeout(() => startBtn.innerHTML = originalText, 3000);
-                    return;
-                }
-
-                const link = unvisitedLinks[index];
-                link.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                link.style.boxShadow = '0 0 20px #0078d4';
-
-                setTimeout(() => {
-                    link.click();
-                    link.style.boxShadow = '';
-                }, 200);
-
-                index++;
-                nextActionTime = now + PACE;
-            }, 500);
-        });
-    }
 
     updateUI();
 }
@@ -306,39 +243,68 @@ document.addEventListener('DOMContentLoaded', () => {
     setupObservers();
     initProgressTracker(); // Initialize the tracker
 
-    // Mouse positioning for card glow effects & 3D Tilt
+    // Mouse positioning for card glow effects & 3D Tilt - OPTIMIZED
     const grid = document.getElementById('categories-grid');
     if (grid) {
-        grid.onmousemove = e => {
-            for (const card of document.getElementsByClassName('card')) {
-                const rect = card.getBoundingClientRect(),
-                    x = e.clientX - rect.left,
-                    y = e.clientY - rect.top;
+        let cards = [];
+        let rafId = null;
+        let mouseX = 0, mouseY = 0;
 
-                // Set CSS variables for spotlight
+        // Cache cards on mouse enter to avoid DOM queries during move
+        grid.addEventListener('mouseenter', () => {
+            cards = Array.from(document.getElementsByClassName('card'));
+        });
+
+        const updateCards = () => {
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const x = mouseX - rect.left;
+                const y = mouseY - rect.top;
+
                 card.style.setProperty('--mouse-x', `${x}px`);
                 card.style.setProperty('--mouse-y', `${y}px`);
 
-                // 3D Tilt Calculation
                 const centerX = rect.width / 2;
                 const centerY = rect.height / 2;
                 const MAX_ROTATION = 10;
+                // Calculate rotation only if near the card to save calc? 
+                // Actually, CSS 'will-change' might help more, but JS calc is cheap.
                 const rotateX = ((y - centerY) / centerY) * -MAX_ROTATION;
                 const rotateY = ((x - centerX) / centerX) * MAX_ROTATION;
 
                 card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+            });
+            rafId = null;
+        };
+
+        grid.onmousemove = e => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+
+            if (!rafId) {
+                rafId = requestAnimationFrame(updateCards);
             }
         };
 
         grid.onmouseleave = () => {
-            for (const card of document.getElementsByClassName('card')) {
-                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+            if (rafId) {
+                cancelAnimationFrame(rafId);
+                rafId = null;
             }
+            // Use cached cards
+            cards.forEach(card => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+            });
         };
     }
 
-    // Global Ripple Effect
+    // Global Ripple Effect - Throttled
+    let lastRippleTime = 0;
     document.addEventListener('click', (e) => {
+        const now = Date.now();
+        if (now - lastRippleTime < 100) return; // Limit to 10 ripples per second
+        lastRippleTime = now;
+
         const ripple = document.createElement('div');
         ripple.className = 'ripple-effect';
         ripple.style.left = `${e.clientX}px`;

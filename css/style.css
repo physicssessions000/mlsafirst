@@ -71,7 +71,7 @@ body {
 /* Hero Section */
 .hero-section {
     padding: 1.5rem 0 1.5rem;
-    /* Further reduced */
+    padding: 1rem 0 1rem;
     text-align: center;
     position: relative;
     animation: fade-in-up 0.8s ease-out forwards;
@@ -139,8 +139,14 @@ h1 {
     background-clip: text;
     -webkit-text-fill-color: transparent;
     filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.3));
-    text-transform: uppercase;
     animation: metal-shine 6s ease-in-out infinite alternate;
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 2rem;
+        /* Smaller for mobile */
+    }
 }
 
 @keyframes metal-shine {
@@ -214,6 +220,8 @@ p {
     transform: translateY(20px);
     position: relative;
     overflow: hidden;
+    will-change: transform;
+    /* Performance Hint */
 }
 
 /* Holographic Border Effect */
@@ -417,9 +425,10 @@ footer {
     pointer-events: none;
     /* transition: transform 0.1s ease-out; Removed for instant sync */
     will-change: transform;
+    transform: translate3d(0, 0, 0);
+    /* Hardware Accel */
 }
 
-/* Mobile */
 @media (max-width: 768px) {
     .magic-cursor {
         display: none;
@@ -427,31 +436,36 @@ footer {
     }
 
     .hero-section {
-        padding: 4rem 0 2rem;
+        padding: 2rem 0 1rem;
+        /* Compact padding */
     }
 
     h1 {
-        font-size: 3rem;
-        margin-bottom: 2rem;
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
     }
 
     p {
-        font-size: 1.1rem;
+        font-size: 1rem;
         padding: 0 1rem;
     }
 
     .categories-container {
         grid-template-columns: 1fr;
         padding-top: 1rem;
+        gap: 1.5rem;
     }
 
     .card {
         padding: 1.5rem;
     }
 
-    .start-session-btn {
-        width: 100%;
-        justify-content: center;
-        padding: 1.2rem;
+    .query-pill {
+        padding: 0.5rem 1rem;
+        /* Smaller pill */
+    }
+
+    .query-text {
+        font-size: 0.85rem;
     }
 }
